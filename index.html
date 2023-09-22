@@ -52,6 +52,32 @@
         });
         window.scrollTo(0, document.body.scrollHeight);
       });
+
+ /// gif
+      
+
+socket.on('chat message', function(msg) {
+  var item = document.createElement('li');
+  
+  
+  item.innerHTML = processMessage(msg);
+  
+  messages.appendChild(item);
+  window.scrollTo(0, document.body.scrollHeight);
+});
+
+
+
+function processMessage(msg) {
+  return msg.replace(/(http[s]?:\/\/[^\s]+)/g, function(url) {
+    if (url.match(/\.(gif|jpg|jpeg|tiff|png)$/i)) {
+      return '<img src="' + url + '" alt="Image" style="max-width: 100%; max-height: 200px;" />';
+    } else {
+      return '<a href="' + url + '" target="_blank">' + url + '</a>';
+    }
+  });
+}
+/// gif
     </script>
   </body>
 </html>
