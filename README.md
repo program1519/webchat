@@ -1,8 +1,18 @@
 # webchat<br>
+-chat3.0
+ถ้ามีคนสแปมหรือ เขียน /report ละส่งข้อมูลไปยัง
+logreport.txt<br>
+<img src="https://img2.pic.in.th/pic/Screenshot-2023-12-24-204602.png"  width="322" height="215"><br>
+<img src="pic_ocean.jpg"  width="322" height="215"><br>
+_____________________
 -chat2.1<br>
 รองรับgif
+____________________
 -chat 2.0<br>
 เก็บประวัติข้อความ<br>
+
+
+____________________
 -chat 1.0<br>
 .........
 
