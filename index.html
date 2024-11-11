@@ -1,65 +1,170 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>chat</title>
-    <style>
-      bot{
-        color: red
-      }
-      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-
-      #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
-      #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
-      #input:focus { outline: none; }
-      #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
-
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages > li { padding: 0.5rem 1rem; }
-     
-    </style>
-  </head>
-  <body>
-    <ul id="messages"></ul>
-    <form id="form" action="">
-      <input id="input" autocomplete="off" /><button>ส่งข้อความ</button>
-    </form>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-<script>
-  var socket = io();
-
-  var messages = document.getElementById('messages');
-  var form = document.getElementById('form');
-  var input = document.getElementById('input');
-
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    if (input.value) {
-      socket.emit('chat message', input.value);
-      input.value = '';
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Window</title>
+  <style>
+    body {
+      background-color: #c0c0c0;
+      font-family: 'Tahoma', sans-serif;
+      color: black;
+      margin: 0;
+      padding: 0;
+      background-image: url('https://p1519.xyz/cute.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
     }
-  });
 
+    .window {
+      width: 500px;
+      border: 2px solid #000080;
+      background-color: #f0f0f0;
+      margin: 50px auto;
+      padding: 10px;
+      box-shadow: 2px 2px 5px #666666;
+      position: relative;
+    }
 
-  socket.on('chat message', function(msg) {
-    var item = document.createElement('li');
-    item.textContent = msg; 
-    messages.appendChild(item);
-    window.scrollTo(0, document.body.scrollHeight);
-  });
+    .window-header {
+      background-color: #000080;
+      color: white;
+      padding: 5px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: move;
+    }
 
+    .window-header .close-btn {
+      float: right;
+      color: white;
+      cursor: pointer;
+    }
 
-  socket.on('chat history', function(history) {
-    history.forEach(function(msg) {
+    .window-content {
+      padding: 10px;
+      font-size: 14px;
+      background-color: #e0e0e0;
+      border: 1px solid #808080;
+      color: #000080;
+    }
+
+    .iframe-container {
+      width: 100%;
+      height: 300px;
+      margin-top: 10px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 5px 15px;
+      margin: 10px;
+      background-color: #d0d0d0;
+      border: 1px solid #808080;
+      text-decoration: none;
+      font-size: 12px;
+      color: black;
+      text-align: center;
+      border-radius: 3px;
+    }
+
+    .btn:hover {
+      background-color: #a0a0a0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- หน้าต่างแชท -->
+  <div class="window" id="chatWindow">
+    <div class="window-header" id="windowHeader">
+      Chat Window
+      <span class="close-btn" id="closeBtn">&times;</span>
+    </div>
+    <div class="window-content">
+      <ul id="messages"></ul>
+      <form id="form" action="">
+        <input id="input" autocomplete="off" />
+        <button>Send Message</button>
+      </form>
+    </div>
+    
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // ดึงองค์ประกอบต่างๆ
+    var socket = io();
+    var messages = document.getElementById('messages');
+    var form = document.getElementById('form');
+    var input = document.getElementById('input');
+    var closeBtn = document.getElementById('closeBtn');
+    var chatWindow = document.getElementById('chatWindow');
+    var windowHeader = document.getElementById('windowHeader');
+
+    // ฟังก์ชันส่งข้อความเมื่อกรอกข้อความในฟอร์ม
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (input.value) {
+        socket.emit('chat message', input.value);
+        input.value = '';
+      }
+    });
+
+    // เมื่อรับข้อความใหม่จากเซิร์ฟเวอร์
+    socket.on('chat message', function(msg) {
       var item = document.createElement('li');
       item.textContent = msg;
       messages.appendChild(item);
+      window.scrollTo(0, document.body.scrollHeight);
     });
-    window.scrollTo(0, document.body.scrollHeight);
-  });
 
-</script>
+    // เมื่อได้รับประวัติข้อความจากเซิร์ฟเวอร์
+    socket.on('chat history', function(history) {
+      history.forEach(function(msg) {
+        var item = document.createElement('li');
+        item.textContent = msg;
+        messages.appendChild(item);
+      });
+      window.scrollTo(0, document.body.scrollHeight);
+    });
 
-  </body>
+    // การลากหน้าต่าง
+    var isDragging = false;
+    var offsetX = 0, offsetY = 0;
+
+    windowHeader.addEventListener('mousedown', function(e) {
+      isDragging = true;
+      offsetX = e.clientX - chatWindow.offsetLeft;
+      offsetY = e.clientY - chatWindow.offsetTop;
+      document.addEventListener('mousemove', dragWindow);
+      document.addEventListener('mouseup', stopDragWindow);
+    });
+
+    function dragWindow(e) {
+      if (isDragging) {
+        chatWindow.style.left = (e.clientX - offsetX) + 'px';
+        chatWindow.style.top = (e.clientY - offsetY) + 'px';
+      }
+    }
+
+    function stopDragWindow() {
+      isDragging = false;
+      document.removeEventListener('mousemove', dragWindow);
+      document.removeEventListener('mouseup', stopDragWindow);
+    }
+
+    // การปิดหน้าต่าง
+    closeBtn.addEventListener('click', function() {
+      chatWindow.style.display = 'none';
+    });
+  </script>
+
+</body>
 </html>
-
