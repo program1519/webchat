@@ -82,7 +82,7 @@
 </head>
 <body>
 
-  <!-- หน้าต่างแชท -->
+  
   <div class="window" id="chatWindow">
     <div class="window-header" id="windowHeader">
       Chat Window
@@ -99,7 +99,7 @@
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    // ดึงองค์ประกอบต่างๆ
+    
     var socket = io();
     var messages = document.getElementById('messages');
     var form = document.getElementById('form');
@@ -108,7 +108,7 @@
     var chatWindow = document.getElementById('chatWindow');
     var windowHeader = document.getElementById('windowHeader');
 
-    // ฟังก์ชันส่งข้อความเมื่อกรอกข้อความในฟอร์ม
+    
     form.addEventListener('submit', function(e) {
       e.preventDefault();
       if (input.value) {
@@ -117,7 +117,7 @@
       }
     });
 
-    // เมื่อรับข้อความใหม่จากเซิร์ฟเวอร์
+    
     socket.on('chat message', function(msg) {
       var item = document.createElement('li');
       item.textContent = msg;
@@ -125,7 +125,7 @@
       window.scrollTo(0, document.body.scrollHeight);
     });
 
-    // เมื่อได้รับประวัติข้อความจากเซิร์ฟเวอร์
+    
     socket.on('chat history', function(history) {
       history.forEach(function(msg) {
         var item = document.createElement('li');
@@ -135,7 +135,7 @@
       window.scrollTo(0, document.body.scrollHeight);
     });
 
-    // การลากหน้าต่าง
+    
     var isDragging = false;
     var offsetX = 0, offsetY = 0;
 
@@ -160,7 +160,7 @@
       document.removeEventListener('mouseup', stopDragWindow);
     }
 
-    // การปิดหน้าต่าง
+    
     closeBtn.addEventListener('click', function() {
       chatWindow.style.display = 'none';
     });
