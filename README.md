@@ -1,4 +1,8 @@
 # webchat<br>
+2024!!!<br>
+แก้bug ข้อความ แสดงชํ้า<br>
+
+
 -chat3.0
 ถ้ามีคนสแปมหรือ เขียน /report ละส่งข้อมูลไปยัง
 logreport.txt<br>
